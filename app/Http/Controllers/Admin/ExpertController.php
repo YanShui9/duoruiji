@@ -3,42 +3,82 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\ExpertRequest;
+use App\Models\Expert;
+use Illuminate\Support\Facades\Storage;
 
 class ExpertController extends Controller
 {
     public function index()
     {
-        // TODO: Task 6 实现
+        $experts = Expert::ordered()->paginate(15);
+        return view('admin.experts.index', compact('experts'));
     }
 
     public function create()
     {
-        // TODO: Task 6 实现
+        return view('admin.experts.create');
     }
 
-    public function store(Request $request)
+    public function store(ExpertRequest $request)
     {
-        // TODO: Task 6 实现
+        $data = $request->validated();
+
+        if ($request->hasFile('avatar')) {
+            $data['avatar'] = $request->file('avatar')->store('experts', 'public');
+            $this->createThumbnail($data['avatar']);
+        }
+
+        Expert::create($data);
+
+        return redirect()->route('admin.experts.index')->with('success', '专家添加成功');
     }
 
-    public function show($id)
+    public function edit(Expert $expert)
     {
-        // TODO: Task 6 实现
+        return view('admin.experts.edit', compact('expert'));
     }
 
-    public function edit($id)
+    public function update(ExpertRequest $request, Expert $expert)
     {
-        // TODO: Task 6 实现
+        $data = $request->validated();
+
+        if ($request->hasFile('avatar')) {
+            // 删除旧头像
+            if ($expert->avatar) {
+                Storage::disk('public')->delete($expert->avatar);
+                // 删除旧缩略图
+                $oldThumb = str_replace('/experts/', '/experts/thumb_', $expert->avatar);
+                Storage::disk('public')->delete($oldThumb);
+            }
+            $data['avatar'] = $request->file('avatar')->store('experts', 'public');
+            $this->createThumbnail($data['avatar']);
+        }
+
+        $expert->update($data);
+
+        return redirect()->route('admin.experts.index')->with('success', '专家更新成功');
     }
 
-    public function update(Request $request, $id)
+    public function destroy(Expert $expert)
     {
-        // TODO: Task 6 实现
+        if ($expert->avatar) {
+            Storage::disk('public')->delete($expert->avatar);
+            $thumb = str_replace('/experts/', '/experts/thumb_', $expert->avatar);
+            Storage::disk('public')->delete($thumb);
+        }
+        $expert->delete();
+
+        return redirect()->route('admin.experts.index')->with('success', '专家删除成功');
     }
 
-    public function destroy($id)
+    private function createThumbnail($path)
     {
-        // TODO: Task 6 实现
+        $fullPath = storage_path('app/public/' . $path);
+        $thumbPath = str_replace('/experts/', '/experts/thumb_', $path);
+
+        \Image::make($fullPath)
+            ->fit(200, 200)
+            ->save(storage_path('app/public/' . $thumbPath));
     }
 }
