@@ -3,42 +3,67 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\LectureRequest;
+use App\Models\Lecture;
+use App\Models\Expert;
+use Illuminate\Support\Facades\Storage;
 
 class LectureController extends Controller
 {
     public function index()
     {
-        // TODO: Task 7 实现
+        $lectures = Lecture::ordered()->paginate(15);
+        return view('admin.lectures.index', compact('lectures'));
     }
 
     public function create()
     {
-        // TODO: Task 7 实现
+        $experts = Expert::active()->ordered()->get();
+        return view('admin.lectures.create', compact('experts'));
     }
 
-    public function store(Request $request)
+    public function store(LectureRequest $request)
     {
-        // TODO: Task 7 实现
+        $data = $request->validated();
+
+        if ($request->hasFile('cover_image')) {
+            $data['cover_image'] = $request->file('cover_image')->store('lectures', 'public');
+        }
+
+        Lecture::create($data);
+
+        return redirect()->route('admin.lectures.index')->with('success', '讲座添加成功');
     }
 
-    public function show($id)
+    public function edit(Lecture $lecture)
     {
-        // TODO: Task 7 实现
+        $experts = Expert::active()->ordered()->get();
+        return view('admin.lectures.edit', compact('lecture', 'experts'));
     }
 
-    public function edit($id)
+    public function update(LectureRequest $request, Lecture $lecture)
     {
-        // TODO: Task 7 实现
+        $data = $request->validated();
+
+        if ($request->hasFile('cover_image')) {
+            if ($lecture->cover_image) {
+                Storage::disk('public')->delete($lecture->cover_image);
+            }
+            $data['cover_image'] = $request->file('cover_image')->store('lectures', 'public');
+        }
+
+        $lecture->update($data);
+
+        return redirect()->route('admin.lectures.index')->with('success', '讲座更新成功');
     }
 
-    public function update(Request $request, $id)
+    public function destroy(Lecture $lecture)
     {
-        // TODO: Task 7 实现
-    }
+        if ($lecture->cover_image) {
+            Storage::disk('public')->delete($lecture->cover_image);
+        }
+        $lecture->delete();
 
-    public function destroy($id)
-    {
-        // TODO: Task 7 实现
+        return redirect()->route('admin.lectures.index')->with('success', '讲座删除成功');
     }
 }
