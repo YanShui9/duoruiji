@@ -10,8 +10,30 @@ class ExpertController extends Controller
 {
     public function index()
     {
-        $experts = Expert::active()->ordered()->paginate(12);
-        return view('frontend.experts.index', compact('experts'));
+        $query = Expert::active()->ordered();
+
+        // 搜索专家姓名
+        if ($search = request('search')) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        // 筛选医院
+        if ($hospital = request('hospital')) {
+            $query->where('hospital', $hospital);
+        }
+
+        // 筛选科室
+        if ($department = request('department')) {
+            $query->where('department', $department);
+        }
+
+        $experts = $query->paginate(12);
+
+        // 获取筛选选项
+        $hospitals = Expert::active()->distinct()->pluck('hospital');
+        $departments = Expert::active()->distinct()->pluck('department');
+
+        return view('frontend.experts.index', compact('experts', 'hospitals', 'departments'));
     }
 
     public function show($id)
