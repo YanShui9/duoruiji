@@ -9,12 +9,39 @@ class LectureController extends Controller
 {
     public function index()
     {
-        $lectures = Lecture::ordered()->paginate(12);
-        return view('frontend.lectures.index', compact('lectures'));
+        // 自动更新过期的直播状态
+        Lecture::updateExpiredStatuses();
+
+        $category = request('category');
+        $query = Lecture::ordered();
+
+        // 搜索讲座标题
+        if ($search = request('search')) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        // 筛选状态
+        if ($status = request('status')) {
+            $query->where('status', $status);
+        }
+
+        // 筛选分类
+        if ($category) {
+            $query->ofCategory($category);
+        }
+
+        $lectures = $query->paginate(12);
+        $categories = Lecture::getCategories();
+        $currentCategory = $category;
+
+        return view('frontend.lectures.index', compact('lectures', 'categories', 'currentCategory'));
     }
 
     public function show($id)
     {
+        // 自动更新过期的直播状态
+        Lecture::updateExpiredStatuses();
+
         $lecture = Lecture::findOrFail($id);
         $experts = $lecture->experts();
 
