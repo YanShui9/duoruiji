@@ -13,18 +13,19 @@ class ExpertController extends Controller
         $query = Expert::active()->ordered();
 
         // 搜索专家姓名
-        if ($search = request('search')) {
+        if (request()->filled('search')) {
+            $search = addcslashes(request('search'), '%_');
             $query->where('name', 'like', "%{$search}%");
         }
 
         // 筛选医院
-        if ($hospital = request('hospital')) {
-            $query->where('hospital', $hospital);
+        if (request()->filled('hospital')) {
+            $query->where('hospital', request('hospital'));
         }
 
         // 筛选科室
-        if ($department = request('department')) {
-            $query->where('department', $department);
+        if (request()->filled('department')) {
+            $query->where('department', request('department'));
         }
 
         $experts = $query->paginate(12);

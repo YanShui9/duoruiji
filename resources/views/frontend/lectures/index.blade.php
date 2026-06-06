@@ -29,6 +29,9 @@
 <section style="padding: 2rem 0 0;">
     <div class="container" style="max-width: 1200px;">
         <form action="{{ route('lectures.index') }}" method="GET">
+            @if($currentCategory)
+                <input type="hidden" name="category" value="{{ $currentCategory }}">
+            @endif
             <div style="background: var(--color-bg-warm); border-radius: var(--radius-md); padding: 1.5rem;">
                 <div class="d-flex gap-3 flex-wrap align-items-center">
                     <div style="flex: 1; min-width: 200px; position: relative;">
@@ -137,12 +140,19 @@
 
                         <!-- 关联专家 -->
                         @php
-                            $experts = $lecture->experts();
+                            $lectureExperts = collect();
+                            if ($lecture->expert_ids) {
+                                foreach ($lecture->expert_ids as $eid) {
+                                    if (isset($expertsMap[$eid])) {
+                                        $lectureExperts->push($expertsMap[$eid]);
+                                    }
+                                }
+                            }
                         @endphp
-                        @if($experts->count() > 0)
+                        @if($lectureExperts->count() > 0)
                         <div class="d-flex align-items-center mb-3">
                             <div class="d-flex" style="margin-right: 10px;">
-                                @foreach($experts->take(3) as $expert)
+                                @foreach($lectureExperts->take(3) as $expert)
                                     @if($expert->avatar)
                                         <img src="{{ $expert->thumb_avatar }}" class="rounded-circle"
                                              style="width: 32px; height: 32px; object-fit: cover; border: 2px solid #fff; margin-left: -8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
@@ -156,7 +166,7 @@
                                 @endforeach
                             </div>
                             <small style="color: var(--color-text-secondary); font-size: 0.85rem;">
-                                {{ $experts->first()->name }}{{ $experts->count() > 1 ? ' 等' : '' }}
+                                {{ $lectureExperts->first()->name }}{{ $lectureExperts->count() > 1 ? ' 等' : '' }}
                             </small>
                         </div>
                         @endif

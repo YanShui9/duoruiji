@@ -14,14 +14,16 @@ Route::get('/experts', [FrontExpertController::class, 'index'])->name('experts.i
 Route::get('/experts/{id}', [FrontExpertController::class, 'show'])->name('experts.show');
 Route::get('/videos', [FrontVideoController::class, 'index'])->name('videos.index');
 Route::get('/videos/{id}', [FrontVideoController::class, 'show'])->name('videos.show');
+Route::get('/qrcode', [FrontVideoController::class, 'qrcode'])->name('qrcode');
 
 // 后台路由
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('experts', App\Http\Controllers\Admin\ExpertController::class);
     Route::resource('lectures', App\Http\Controllers\Admin\LectureController::class);
     Route::resource('videos', App\Http\Controllers\Admin\VideoController::class);
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class)->only(['index', 'edit', 'update', 'destroy']);
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class)->except(['show']);
+    Route::post('/upload-image', [App\Http\Controllers\Admin\DashboardController::class, 'uploadImage'])->name('upload.image');
 });
 
 Auth::routes();

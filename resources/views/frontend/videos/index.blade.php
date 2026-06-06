@@ -29,6 +29,9 @@
 <section style="padding: 2rem 0 0;">
     <div class="container" style="max-width: 1200px;">
         <form action="{{ route('videos.index') }}" method="GET">
+            @if($currentCategory)
+                <input type="hidden" name="category" value="{{ $currentCategory }}">
+            @endif
             <div style="background: var(--color-bg-warm); border-radius: var(--radius-md); padding: 1.5rem;">
                 <div class="d-flex gap-3 flex-wrap align-items-center">
                     <div style="flex: 1; min-width: 200px; position: relative;">
@@ -43,11 +46,6 @@
                             <option value="{{ $expert->id }}" {{ request('expert_id') == $expert->id ? 'selected' : '' }}>{{ $expert->name }}</option>
                         @endforeach
                     </select>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}"
-                           style="padding: 0.75rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-pill); background: white;">
-                    <span style="color: var(--color-text-light);">至</span>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}"
-                           style="padding: 0.75rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-pill); background: white;">
                     <button type="submit" class="btn-parsley btn-parsley-dark">
                         <i class="bi bi-search"></i> 搜索
                     </button>
@@ -57,6 +55,21 @@
                 </div>
             </div>
         </form>
+        <!-- 分类标签 -->
+        <div class="d-flex flex-wrap gap-2 justify-content-center mt-4">
+            <a href="{{ route('videos.index', array_merge(request()->except('category'))) }}"
+               class="btn {{ !$currentCategory ? 'btn-parsley btn-parsley-dark' : 'btn-parsley btn-parsley-outline' }}"
+               style="{{ $currentCategory ? 'border-color: var(--color-border); color: var(--color-text);' : '' }}">
+                全部
+            </a>
+            @foreach($categories as $key => $name)
+                <a href="{{ route('videos.index', array_merge(request()->except('category'), ['category' => $key])) }}"
+                   class="btn {{ $currentCategory === $key ? 'btn-parsley btn-parsley-dark' : 'btn-parsley btn-parsley-outline' }}"
+                   style="{{ $currentCategory !== $key ? 'border-color: var(--color-border); color: var(--color-text);' : '' }}">
+                    {{ $name }}
+                </a>
+            @endforeach
+        </div>
     </div>
 </section>
 
@@ -104,12 +117,19 @@
 
                         <!-- 关联专家 -->
                         @php
-                            $experts = $video->experts();
+                            $videoExperts = collect();
+                            if ($video->expert_ids) {
+                                foreach ($video->expert_ids as $eid) {
+                                    if (isset($expertsMap[$eid])) {
+                                        $videoExperts->push($expertsMap[$eid]);
+                                    }
+                                }
+                            }
                         @endphp
-                        @if($experts->count() > 0)
+                        @if($videoExperts->count() > 0)
                         <div class="d-flex align-items-center mb-3">
                             <div class="d-flex" style="margin-right: 10px;">
-                                @foreach($experts->take(3) as $expert)
+                                @foreach($videoExperts->take(3) as $expert)
                                     @if($expert->avatar)
                                         <img src="{{ $expert->thumb_avatar }}" class="rounded-circle"
                                              style="width: 28px; height: 28px; object-fit: cover; border: 2px solid #fff; margin-left: -6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
@@ -123,7 +143,7 @@
                                 @endforeach
                             </div>
                             <small style="color: var(--color-text-secondary); font-size: 0.8rem;">
-                                {{ $experts->first()->name }}{{ $experts->count() > 1 ? ' 等' : '' }}
+                                {{ $videoExperts->first()->name }}{{ $videoExperts->count() > 1 ? ' 等' : '' }}
                             </small>
                         </div>
                         @endif
@@ -152,7 +172,7 @@
         <!-- 分页 -->
         @if($videos->hasPages())
         <div class="d-flex justify-content-center mt-5">
-            {{ $videos->links() }}
+            {{ $videos->appends(request()->query())->links() }}
         </div>
         @endif
     </div>

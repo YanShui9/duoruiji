@@ -20,7 +20,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'avatar',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -41,4 +43,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * 获取头像缩略图URL
+     */
+    public function getThumbAvatarAttribute()
+    {
+        if (!$this->avatar) return null;
+        $thumbPath = str_replace('/users/', '/users/thumb_', $this->avatar);
+        if (\Storage::disk('public')->exists($thumbPath)) {
+            return \Storage::url($thumbPath);
+        }
+        return \Storage::url($this->avatar);
+    }
 }

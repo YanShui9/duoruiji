@@ -37,6 +37,42 @@ class ExpertSeeder extends Seeder
                 'sort_order' => 3,
                 'status' => 1,
             ],
+            [
+                'name' => '赵医生',
+                'title' => '主治医师',
+                'hospital' => '广州中山大学附属第一医院',
+                'department' => '疼痛科',
+                'bio' => '赵医生专注于慢性疼痛的微创介入治疗，在神经病理性疼痛方面有独到见解。',
+                'sort_order' => 4,
+                'status' => 1,
+            ],
+            [
+                'name' => '刘教授',
+                'title' => '主任医师、教授',
+                'hospital' => '浙江大学医学院附属邵逸夫医院',
+                'department' => '肿瘤内科',
+                'bio' => '刘教授在肿瘤支持治疗和姑息医学领域有20年临床经验，擅长复杂癌痛的个体化治疗。',
+                'sort_order' => 5,
+                'status' => 1,
+            ],
+            [
+                'name' => '陈主任',
+                'title' => '副主任医师',
+                'hospital' => '中南大学湘雅医院',
+                'department' => '疼痛医学科',
+                'bio' => '陈主任是国内较早开展疼痛专科的医师之一，在多瑞吉剂量滴定方面经验丰富。',
+                'sort_order' => 6,
+                'status' => 1,
+            ],
+            [
+                'name' => '周医生',
+                'title' => '主治医师',
+                'hospital' => '北京协和医院',
+                'department' => '麻醉科',
+                'bio' => '周医生专注于术后疼痛管理和急性疼痛控制，在多模式镇痛方面有深入研究。',
+                'sort_order' => 7,
+                'status' => 0, // 禁用状态
+            ],
         ];
 
         foreach ($experts as $expert) {

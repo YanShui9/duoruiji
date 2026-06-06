@@ -16,13 +16,14 @@ class LectureController extends Controller
         $query = Lecture::ordered();
 
         // 搜索讲座标题
-        if ($search = request('search')) {
+        if (request()->filled('search')) {
+            $search = addcslashes(request('search'), '%_');
             $query->where('title', 'like', "%{$search}%");
         }
 
         // 筛选状态
-        if ($status = request('status')) {
-            $query->where('status', $status);
+        if (request()->filled('status')) {
+            $query->where('status', request('status'));
         }
 
         // 筛选分类
@@ -34,7 +35,17 @@ class LectureController extends Controller
         $categories = Lecture::getCategories();
         $currentCategory = $category;
 
-        return view('frontend.lectures.index', compact('lectures', 'categories', 'currentCategory'));
+        // 预加载所有相关专家，避免 N+1 查询
+        $allExpertIds = [];
+        foreach ($lectures as $lecture) {
+            if ($lecture->expert_ids) {
+                $allExpertIds = array_merge($allExpertIds, $lecture->expert_ids);
+            }
+        }
+        $allExpertIds = array_unique($allExpertIds);
+        $expertsMap = \App\Models\Expert::whereIn('id', $allExpertIds)->get()->keyBy('id');
+
+        return view('frontend.lectures.index', compact('lectures', 'categories', 'currentCategory', 'expertsMap'));
     }
 
     public function show($id)
@@ -59,6 +70,10 @@ class LectureController extends Controller
                 ->get();
         }
 
-        return view('frontend.lectures.show', compact('lecture', 'experts', 'relatedLectures'));
+        // 生成分享链接（使用 tunnel_url 或当前 URL）
+        $tunnelUrl = config('app.tunnel_url');
+        $shareUrl = $tunnelUrl ? $tunnelUrl . '/lectures/' . $id : url('/lectures/' . $id);
+
+        return view('frontend.lectures.show', compact('lecture', 'experts', 'relatedLectures', 'shareUrl'));
     }
 }

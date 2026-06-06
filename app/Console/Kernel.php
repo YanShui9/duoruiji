@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // 每分钟自动更新直播状态
+        $schedule->command('lectures:update-status')->everyMinute();
     }
 
     /**

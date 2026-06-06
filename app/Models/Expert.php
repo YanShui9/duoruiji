@@ -27,6 +27,19 @@ class Expert extends Model
 
     public function scopeOrdered($query)
     {
-        return $query->orderBy('sort_order')->orderBy('id', 'desc');
+        return $query->orderBy('id', 'desc');
+    }
+
+    /**
+     * 获取头像缩略图URL
+     */
+    public function getThumbAvatarAttribute()
+    {
+        if (!$this->avatar) return null;
+        $thumbPath = str_replace('/experts/', '/experts/thumb_', $this->avatar);
+        if (\Storage::disk('public')->exists($thumbPath)) {
+            return \Storage::url($thumbPath);
+        }
+        return \Storage::url($this->avatar);
     }
 }
