@@ -83,7 +83,7 @@ php artisan serve
 - 前台首页：http://127.0.0.1:8000
 - 后台管理：http://127.0.0.1:8000/admin
 
-> 说明：`storage/app/public` 下的图片、视频等媒体文件属于运行时数据，未纳入版本库。若要完整复现界面效果，需要准备对应的演示媒体，或使用 `php artisan seed:test-media`（联网下载示例图片）。
+> 说明：演示用的专家头像、讲座/视频封面与示例视频已随仓库提供（约 24MB，位于 `storage/app/public/`）。clone 后执行上面的 `storage:link` 即可正常显示图片并播放示例视频，无需额外准备。若想联网重新生成占位图，可运行 `php artisan seed:test-media`。
 
 ## 目录结构
 
