@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', '往期视频 - 多瑞吉医学名家讲堂')
+@section('title', ($currentLecture ? $currentLecture->title . ' - ' : '') . '往期视频 - 多瑞吉医学名家讲堂')
 
 @section('content')
 <!-- 页面头部 - 全屏图片 -->
 <section class="hero-section" style="min-height: 50vh;">
     <div class="hero-bg">
-        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1920&q=80"
+        <img src="/images/mt_research.jpg"
              alt="往期视频"
              loading="eager">
     </div>
@@ -21,6 +21,11 @@
             <a href="{{ route('home') }}" class="btn-back-hero mt-3">
                 <i class="bi bi-arrow-left"></i> 返回首页
             </a>
+            @if($currentLecture)
+            <a href="{{ route('lectures.show', $currentLecture) }}" class="btn-back-hero mt-2">
+                <i class="bi bi-arrow-left"></i> 返回讲座：{{ Str::limit($currentLecture->title, 20) }}
+            </a>
+            @endif
         </div>
     </div>
 </section>
@@ -84,7 +89,7 @@
                         @if($video->cover_image)
                             <img src="{{ $video->thumb_cover }}" alt="{{ $video->title }}">
                         @else
-                            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80"
+                            <img src="/images/mt_hero.jpg"
                                  alt="{{ $video->title }}">
                         @endif
 
@@ -223,3 +228,4 @@
     }
 </style>
 @endpush
+

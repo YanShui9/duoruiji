@@ -6,7 +6,7 @@
 <!-- 页面头部 - 全屏图片 -->
 <section class="hero-section" style="min-height: 50vh;">
     <div class="hero-bg">
-        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1920&q=80"
+        <img src="/images/mt_conference.jpg"
              alt="名家讲堂"
              loading="eager">
     </div>
@@ -91,7 +91,7 @@
                         @if($lecture->cover_image)
                             <img src="{{ $lecture->thumb_cover }}" alt="{{ $lecture->title }}">
                         @else
-                            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80"
+                            <img src="/images/mt_hero.jpg"
                                  alt="{{ $lecture->title }}">
                         @endif
 
@@ -207,3 +207,4 @@
     </div>
 </section>
 @endsection
+

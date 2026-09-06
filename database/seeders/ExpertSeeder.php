@@ -9,6 +9,9 @@ class ExpertSeeder extends Seeder
 {
     public function run()
     {
+        // 可用的头像文件列表
+        $avatars = $this->getAvailableFiles('experts');
+
         $experts = [
             [
                 'name' => '张教授',
@@ -75,8 +78,26 @@ class ExpertSeeder extends Seeder
             ],
         ];
 
-        foreach ($experts as $expert) {
+        foreach ($experts as $i => $expert) {
+            if (!empty($avatars)) {
+                $expert['avatar'] = 'experts/' . $avatars[$i % count($avatars)];
+            }
             Expert::create($expert);
         }
+    }
+
+    /**
+     * 获取存储目录中可用的图片文件（排除缩略图）
+     */
+    protected function getAvailableFiles($dir)
+    {
+        $path = storage_path("app/public/{$dir}");
+        if (!is_dir($path)) {
+            return [];
+        }
+        $files = glob($path . '/*.jpg');
+        return array_values(array_filter(array_map('basename', $files), function ($f) {
+            return strpos($f, 'thumb_') === false;
+        }));
     }
 }

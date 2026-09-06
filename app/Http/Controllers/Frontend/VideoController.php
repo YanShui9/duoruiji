@@ -31,6 +31,11 @@ class VideoController extends Controller
             $query->whereIn('lecture_id', $lectureIds);
         }
 
+        // 按指定讲座筛选
+        if (request()->filled('lecture_id')) {
+            $query->where('lecture_id', (int) request('lecture_id'));
+        }
+
         $videos = $query->paginate(12);
         $categories = Lecture::getCategories();
         $currentCategory = $category;
@@ -48,7 +53,13 @@ class VideoController extends Controller
         // 获取专家列表（用于筛选下拉）
         $experts = Expert::active()->ordered()->get();
 
-        return view('frontend.videos.index', compact('videos', 'experts', 'expertsMap', 'categories', 'currentCategory'));
+        // 当按讲座筛选时，获取讲座信息
+        $currentLecture = null;
+        if (request()->filled('lecture_id')) {
+            $currentLecture = Lecture::find(request('lecture_id'));
+        }
+
+        return view('frontend.videos.index', compact('videos', 'experts', 'expertsMap', 'categories', 'currentCategory', 'currentLecture'));
     }
 
     public function show($id)

@@ -8,7 +8,7 @@
         <div class="row align-items-center g-5">
             <!-- 左侧图片 -->
             <div class="col-lg-6 d-none d-lg-block fade-in-left">
-                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80"
+                <img src="/images/mt_hero.jpg"
                      alt="医学讲座"
                      style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 20px 60px rgba(0,0,0,0.1);">
             </div>
@@ -83,3 +83,4 @@
     </div>
 </section>
 @endsection
+

@@ -6,7 +6,7 @@
 <!-- 页面头部 - 全屏图片 -->
 <section class="hero-section" style="min-height: 50vh;">
     <div class="hero-bg">
-        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=1920&q=80"
+        <img src="/images/mt_expert.jpg"
              alt="名家风采"
              loading="eager">
     </div>
@@ -137,3 +137,4 @@
     </div>
 </section>
 @endsection
+

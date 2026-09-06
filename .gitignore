@@ -13,3 +13,7 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+
+# phpqrcode 插件运行时生成的二维码临时图
+/public/assets/plugins/phpqrcode/temp
+/public/assets/plugins/phpqrcode/cache

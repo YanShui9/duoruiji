@@ -157,10 +157,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 1.5rem;">
-                <div class="mb-3">
-                    <input type="text" id="expertSearch" class="form-control" placeholder="搜索专家姓名、医院..."
-                           oninput="filterExperts()">
-                </div>
                 <div id="expertList" style="max-height: 400px; overflow-y: auto;">
                     @foreach($experts as $expert)
                         <div class="expert-option d-flex align-items-center gap-3 p-3 rounded-3 mb-2"
@@ -250,20 +246,19 @@ function removeExpert(id) {
     selectedExperts.delete(id);
     const tag = document.getElementById('expert-tag-' + id);
     if (tag) tag.remove();
+    // 同步移除弹窗中对应专家选项的选中状态
+    const expertOptions = document.querySelectorAll('.expert-option');
+    expertOptions.forEach(option => {
+        const onclickAttr = option.getAttribute('onclick');
+        if (onclickAttr && onclickAttr.includes(`toggleExpert(${id},`)) {
+            option.classList.remove('selected');
+        }
+    });
     updateSelectedCount();
 }
 
 function updateSelectedCount() {
     document.getElementById('selectedCount').textContent = `已选择 ${selectedExperts.size} 位专家`;
-}
-
-function filterExperts() {
-    const search = document.getElementById('expertSearch').value.toLowerCase();
-    document.querySelectorAll('.expert-option').forEach(option => {
-        const name = option.dataset.name.toLowerCase();
-        const hospital = option.dataset.hospital.toLowerCase();
-        option.style.display = (name.includes(search) || hospital.includes(search)) ? 'flex' : 'none';
-    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {

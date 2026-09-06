@@ -150,7 +150,7 @@
                         </div>
                         <h2 class="font-serif mb-3" style="font-size: 2rem; font-weight: 600;">本次直播已结束</h2>
                         <p style="color: var(--color-text-secondary); margin-bottom: 2rem;">请关注往期视频观看录播内容</p>
-                        <a href="{{ route('videos.index') }}" class="btn-parsley btn-parsley-dark">
+                        <a href="{{ route('videos.index', ['lecture_id' => $lecture->id]) }}" class="btn-parsley btn-parsley-dark">
                             <i class="bi bi-play-circle"></i> 查看往期视频
                         </a>
                     </div>

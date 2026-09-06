@@ -6,7 +6,7 @@
 <!-- Hero 区域 - 全屏图片 -->
 <section class="hero-section">
     <div class="hero-bg">
-        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1920&q=80"
+        <img src="/images/mt_hero.jpg"
              alt="医学讲座"
              loading="eager">
     </div>
@@ -240,7 +240,7 @@
         <!-- 特色1 -->
         <div class="feature-block">
             <div class="feature-block-img fade-in-left">
-                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&q=80"
+                <img src="/images/mt_expert.jpg"
                      alt="权威专家">
             </div>
             <div class="feature-block-content fade-in-right">
@@ -260,7 +260,7 @@
         <!-- 特色2 -->
         <div class="feature-block">
             <div class="feature-block-img fade-in-right">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
+                <img src="/images/mt_research.jpg"
                      alt="在线直播">
             </div>
             <div class="feature-block-content fade-in-left">
@@ -280,7 +280,7 @@
         <!-- 特色3 -->
         <div class="feature-block">
             <div class="feature-block-img fade-in-left">
-                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80"
+                <img src="/images/mt_conference.jpg"
                      alt="随时回看">
             </div>
             <div class="feature-block-content fade-in-right">
@@ -316,7 +316,7 @@
                         @if($lecture->cover_image)
                             <img src="{{ $lecture->thumb_cover }}" alt="{{ $lecture->title }}">
                         @else
-                            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80"
+                            <img src="/images/mt_hero.jpg"
                                  alt="{{ $lecture->title }}">
                         @endif
                         <span class="badge-status badge-ended">
@@ -464,3 +464,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 @endif
 @endpush
+
