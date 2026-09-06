@@ -17,3 +17,6 @@ yarn-error.log
 # phpqrcode 插件运行时生成的二维码临时图
 /public/assets/plugins/phpqrcode/temp
 /public/assets/plugins/phpqrcode/cache
+
+# 本地的 cloudflare 隧道工具，不属于项目代码
+/cloudflared.exe
